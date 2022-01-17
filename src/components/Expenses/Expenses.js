@@ -1,36 +1,47 @@
 import ExpenseItem from "./ExpenseItem";
 import './Expenses.css';
 import Card from "../UI/Card";
+import ExpensesFilter from "./ExpensesFilter";
+import { useState } from 'react/cjs/react.development';
+ 
 
 const Expenses = (props) => {
 
+  const [filteredYear, setFilteredYear] = useState('2020');
+ 
+  const filterHandler = selectedYear => {
+    setFilteredYear(selectedYear);
+  };
+
+  const filteredExpenses = props.items.filter(expense => {
+    return expense.date.getFullYear().toString() === filteredYear;
+  });
+
+  // const filterArray = (year) => {
+  //   year = props.items.date;
+  //   year.filter(
+  //     (x) => (x == filteredYear));
+  // };
+
     return (
-    <Card className="expenses">
-      
-      <ExpenseItem 
-      title={props.items[0].title} 
-      amount={props.items[0].amount} 
-      date={props.items[0].date}
-      />
+      <div>
+      <Card className="expenses">
 
-      <ExpenseItem 
-      title={props.items[1].title} 
-      amount={props.items[1].amount} 
-      date={props.items[1].date}
-      />
-      <ExpenseItem 
-      title={props.items[2].title} 
-      amount={props.items[2].amount} 
-      date={props.items[2].date}
-      />
-
-      <ExpenseItem 
-      title={props.items[3].title} 
-      amount={props.items[3].amount} 
-      date={props.items[3].date}
-      />
+      <ExpensesFilter selected={filteredYear} onChangeFilter={filterHandler}/>
       
-    </Card>
+      {/* Array which renders all elements with expense."props" with "items" array from App.js component */}
+      {filteredExpenses.map((expense) => (
+        <ExpenseItem
+        key={expense.id} // special prop that helps react to keep track on our list to proper render
+        title={expense.title} 
+        amount={expense.amount} 
+        date={expense.date}/>
+      ))}
+
+
+  
+      </Card>
+    </div>
     )
 
 }
